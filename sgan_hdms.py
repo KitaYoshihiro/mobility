@@ -213,6 +213,12 @@ if __name__ == '__main__':
     with open('../20190719_bin_1_ndarray.pickle', mode='rb') as f:
         X = pickle.load(f)
         X = X[0:72,4:196,] # analysis #0-71 (72 samples)
+        X = X + np.ones_like(X)
+        X = np.log(X)
+        m = np.max(np.max(X, axis=2, keepdims=True), axis=1, keepdims=True)
+        X = X/m
+        X = (X - np.ones_like(X) * 0.5) * 2
+
     y = np.array([
         1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 
         1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 
