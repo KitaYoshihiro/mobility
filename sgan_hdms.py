@@ -217,7 +217,7 @@ if __name__ == '__main__':
         X = np.log(X)
         m = np.max(np.max(X, axis=2, keepdims=True), axis=1, keepdims=True)
         X = X/m
-        X = (X - np.ones_like(X) * 0.5) * 2
+        #X = (X - np.ones_like(X) * 0.5) * 2
 
     y = np.array([
         1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 
