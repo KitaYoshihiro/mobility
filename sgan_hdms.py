@@ -11,18 +11,22 @@ from keras import losses
 from keras.utils import to_categorical
 import keras.backend as K
 
+import pickle
+from hdmsgenerator import HDMSGenerator
+
 import matplotlib.pyplot as plt
 
 import numpy as np
 
 class SGAN:
-    def __init__(self):
+    def __init__(self, traindata_generator):
+        self.traindata_generator = traindata_generator
         self.img_rows = 192
         self.img_cols = 1024
         self.channels = 1
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
         self.num_classes = 2
-        self.latent_dim = 10000
+        self.latent_dim = 1000
 
         optimizer = Adam(0.0002, 0.5)
 
@@ -112,12 +116,12 @@ class SGAN:
     def train(self, epochs, batch_size=128, sample_interval=50):
 
         # Load the dataset
-        (X_train, y_train), (_, _) = mnist.load_data()
+        # X_train, y_train = 
 
         # Rescale -1 to 1
-        X_train = (X_train.astype(np.float32) - 127.5) / 127.5
-        X_train = np.expand_dims(X_train, axis=3)
-        y_train = y_train.reshape(-1, 1)
+        # X_train = (X_train.astype(np.float32) - 127.5) / 127.5
+        # X_train = np.expand_dims(X_train, axis=3)
+        # y_train = y_train.reshape(-1, 1)
 
         # Class weights:
         # To balance the difference in occurences of digit class labels.
@@ -139,15 +143,17 @@ class SGAN:
             # ---------------------
 
             # Select a random batch of images
-            idx = np.random.randint(0, X_train.shape[0], batch_size)
-            imgs = X_train[idx]
+            #idx = np.random.randint(0, X_train.shape[0], batch_size)
+            #imgs = X_train[idx]
+            imgs, y_train = next(self.traindata_generator)
 
             # Sample noise and generate a batch of new images
             noise = np.random.normal(0, 1, (batch_size, self.latent_dim))
             gen_imgs = self.generator.predict(noise)
 
             # One-hot encoding of labels
-            labels = to_categorical(y_train[idx], num_classes=self.num_classes+1)
+            #labels = to_categorical(y_train[idx], num_classes=self.num_classes+1)
+            labels = to_categorical(y_train, num_classes=self.num_classes+1)
             fake_labels = to_categorical(np.full((batch_size, 1), self.num_classes), num_classes=self.num_classes+1)
 
             # Train the discriminator
@@ -204,6 +210,19 @@ class SGAN:
 
 
 if __name__ == '__main__':
-    sgan = SGAN()
-    sgan.train(epochs=20000, batch_size=32, sample_interval=50)
+    with open('20190719_bin_1_ndarray.pickle', mode='rb') as f:
+        X = pickle.load(f)
+        X = X[0:72,4:196,] # analysis #0-71 (72 samples)
+    y = np.array([
+        1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 
+        1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 
+        1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 
+    ]) # 24 samples x 3 injections
+
+    batchsize = 8
+    gen = HDMSGenerator(batch_size=batchsize, train_X=X, train_y=y)
+    g = gen.generate()
+
+    sgan = SGAN(traindata_generator = g)
+    sgan.train(epochs=20000, batch_size=batchsize, sample_interval=50)
 
