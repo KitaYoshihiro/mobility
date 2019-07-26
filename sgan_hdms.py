@@ -17,12 +17,12 @@ import numpy as np
 
 class SGAN:
     def __init__(self):
-        self.img_rows = 28
-        self.img_cols = 28
+        self.img_rows = 192
+        self.img_cols = 1024
         self.channels = 1
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
-        self.num_classes = 10
-        self.latent_dim = 100
+        self.num_classes = 2
+        self.latent_dim = 10000
 
         optimizer = Adam(0.0002, 0.5)
 
@@ -39,7 +39,7 @@ class SGAN:
         self.generator = self.build_generator()
 
         # The generator takes noise as input and generates imgs
-        noise = Input(shape=(100,))
+        noise = Input(shape=(self.latent_dim,))
         img = self.generator(noise)
 
         # For the combined model we will only train the generator
@@ -56,9 +56,8 @@ class SGAN:
     def build_generator(self):
 
         model = Sequential()
-
-        model.add(Dense(128 * 7 * 7, activation="relu", input_dim=self.latent_dim))
-        model.add(Reshape((7, 7, 128)))
+        model.add(Dense(128 * 48 * 256, activation="relu", input_dim=self.latent_dim))
+        model.add(Reshape((48, 256, 128)))
         model.add(BatchNormalization(momentum=0.8))
         model.add(UpSampling2D())
         model.add(Conv2D(128, kernel_size=3, padding="same"))
@@ -85,6 +84,7 @@ class SGAN:
         model.add(Conv2D(32, kernel_size=3, strides=2, input_shape=self.img_shape, padding="same"))
         model.add(LeakyReLU(alpha=0.2))
         model.add(Dropout(0.25))
+
         model.add(Conv2D(64, kernel_size=3, strides=2, padding="same"))
         model.add(ZeroPadding2D(padding=((0,1),(0,1))))
         model.add(LeakyReLU(alpha=0.2))
@@ -206,3 +206,4 @@ class SGAN:
 if __name__ == '__main__':
     sgan = SGAN()
     sgan.train(epochs=20000, batch_size=32, sample_interval=50)
+
