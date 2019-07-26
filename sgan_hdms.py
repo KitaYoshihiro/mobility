@@ -61,7 +61,7 @@ class SGAN:
 
         model = Sequential()
         model.add(Dense(1 * 48 * 256, activation="relu", input_dim=self.latent_dim))
-        model.add(Reshape((48, 256, 128)))
+        model.add(Reshape((48, 256, 1)))
         model.add(BatchNormalization(momentum=0.8))
         model.add(UpSampling2D())
         model.add(Conv2D(128, kernel_size=3, padding="same"))
@@ -210,7 +210,7 @@ class SGAN:
 
 
 if __name__ == '__main__':
-    with open('20190719_bin_1_ndarray.pickle', mode='rb') as f:
+    with open('../20190719_bin_1_ndarray.pickle', mode='rb') as f:
         X = pickle.load(f)
         X = X[0:72,4:196,] # analysis #0-71 (72 samples)
     y = np.array([
