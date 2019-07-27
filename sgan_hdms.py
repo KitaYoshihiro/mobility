@@ -1,7 +1,7 @@
 from __future__ import print_function, division
 
 from keras.datasets import mnist
-from keras.layers import Input, Dense, Reshape, Flatten, Dropout, multiply, GaussianNoise
+from keras.layers import Input, Dense, Reshape, Flatten, Dropout, multiply, GaussianNoise, Concatenate
 from keras.layers import BatchNormalization, Activation, Embedding, ZeroPadding2D, MaxPooling2D
 from keras.layers.advanced_activations import LeakyReLU
 from keras.layers.convolutional import UpSampling2D, Conv2D
@@ -83,59 +83,64 @@ class SGAN:
         return Model(noise, img)
 
     def build_discriminator(self):
+        inputImage = Input(shape=self.img_shape)
 
-        model = Sequential()
+        img = Conv2D(32, kernel_size=3, strides=1, input_shape=self.img_shape, padding="same")(inputImage)
+        img = BatchNormalization(momentum=0.8)(img)
+        img = LeakyReLU(alpha=0.2)(img)
+        img = Dropout(0.25)(img)
 
-        model.add(Conv2D(32, kernel_size=3, strides=1, input_shape=self.img_shape, padding="same"))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(Dropout(0.25))
+        img= MaxPooling2D()(img)
+        img_1 = Conv2D(32, kernel_size=3, strides=1, padding="same")(img)
+        img_1 = BatchNormalization(momentum=0.8)(img_1)
+        img = Concatenate()([img_1, img])
+        img = LeakyReLU(alpha=0.2)(img)
+        img = Dropout(0.25)(img)
 
-        model.add(MaxPooling2D())
-        model.add(Conv2D(32, kernel_size=3, strides=1, padding="same"))
-        #model.add(ZeroPadding2D(padding=((0,1),(0,1))))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(Dropout(0.25))
-        model.add(BatchNormalization(momentum=0.8))
+        img = MaxPooling2D()(img)
+        img_1 = Conv2D(64, kernel_size=3, strides=1, padding="same")(img)
+        img_1 = BatchNormalization(momentum=0.8)(img_1)
+        img = Concatenate()([img_1, img])
+        img = LeakyReLU(alpha=0.2)(img)
+        img = Dropout(0.25)(img)
 
-        model.add(MaxPooling2D())
-        model.add(Conv2D(64, kernel_size=3, strides=1, padding="same"))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(Dropout(0.25))
-        model.add(BatchNormalization(momentum=0.8))
+        img = MaxPooling2D()(img)
+        img_1 = Conv2D(128, kernel_size=3, strides=1, padding="same")(img)
+        img_1 = BatchNormalization(momentum=0.8)(img_1)
+        img = Concatenate()([img_1, img])
+        img = LeakyReLU(alpha=0.2)(img)
+        img = Dropout(0.25)(img)
 
-        model.add(MaxPooling2D())
-        model.add(Conv2D(128, kernel_size=3, strides=1, padding="same"))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(Dropout(0.25))
-        model.add(BatchNormalization(momentum=0.8))
+        img = MaxPooling2D()(img)
+        img_1 = Conv2D(256, kernel_size=3, strides=1, padding="same")(img)
+        img_1 = BatchNormalization(momentum=0.8)(img_1)
+        img = Concatenate()([img_1, img])
+        img = LeakyReLU(alpha=0.2)(img)
+        img = Dropout(0.25)(img)
 
-        model.add(MaxPooling2D())
-        model.add(Conv2D(256, kernel_size=3, strides=1, padding="same"))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(Dropout(0.25))
-        model.add(BatchNormalization(momentum=0.8))
+        img = MaxPooling2D()(img)
+        img_1 = Conv2D(512, kernel_size=3, strides=1, padding="same")(img)
+        img_1 = BatchNormalization(momentum=0.8)(img_1)
+        img = Concatenate()([img_1, img])
+        img = LeakyReLU(alpha=0.2)(img)
+        img = Dropout(0.25)(img)
 
-        model.add(MaxPooling2D())
-        model.add(Conv2D(512, kernel_size=3, strides=1, padding="same"))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(Dropout(0.25))
-        model.add(BatchNormalization(momentum=0.8))
+        img = MaxPooling2D()(img)
+        img_1 = Conv2D(1024, kernel_size=3, strides=1, padding="same")(img)
+        img_1 = BatchNormalization(momentum=0.8)(img_1)
+        img = Concatenate()([img_1, img])
+        img = LeakyReLU(alpha=0.2)(img)
+        img = Dropout(0.25)(img)
 
-        model.add(MaxPooling2D())
-        model.add(Conv2D(1024, kernel_size=3, strides=1, padding="same"))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(Dropout(0.25))
-        model.add(Flatten())
+        features = Flatten()(img)
 
-        model.summary()
-
-        img = Input(shape=self.img_shape)
-
-        features = model(img)
         valid = Dense(1, activation="sigmoid")(features)
         label = Dense(self.num_classes+1, activation="softmax")(features)
 
-        return Model(img, [valid, label])
+        model = Model(inputImage, [valid, label])
+        model.summary()
+
+        return model
 
     def train(self, epochs, batch_size=128, sample_interval=50):
 
