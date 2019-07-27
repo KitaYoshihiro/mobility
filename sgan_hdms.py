@@ -72,7 +72,8 @@ class SGAN:
         model.add(Activation("relu"))
         model.add(BatchNormalization(momentum=0.8))
         model.add(Conv2D(1, kernel_size=3, padding="same"))
-        model.add(Activation("tanh"))
+        #model.add(Activation("tanh"))
+        model.add(Activation("sigmoid"))
 
         model.summary()
 
@@ -211,7 +212,7 @@ class SGAN:
         cnt = 0
         for i in range(r):
             for j in range(c):
-                axs[i,j].imshow(gen_imgs[cnt, :,:,0], cmap='jet')
+                axs[i,j].imshow(gen_imgs[cnt, :,:,0], cmap='jet', interpolation='nearestneighbor')
                 axs[i,j].axis('off')
                 cnt += 1
         fig.savefig("/content/drive/Shared drives/ML/HDMS/images/mnist_%d.png" % epoch)
