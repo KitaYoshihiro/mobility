@@ -190,10 +190,11 @@ class SGAN:
             #  Train Generator
             # ---------------------
 
-            g_loss = self.combined.train_on_batch(noise, valid, class_weight=[cw1, cw2]) * 100
+            g_loss = self.combined.train_on_batch(noise, valid, class_weight=[cw1, cw2])
 
             # Plot the progress
-            print ("%d [D loss: %f, acc: %.2f%%, op_acc: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100*d_loss[3], 100*d_loss[4], g_loss))
+            print ("%d [D loss: %f, D loss_real: %f, D loss_fake: %f, acc: %.2f%%, op_acc: %.2f%%] [G loss: %f]"
+             % (epoch, d_loss[0], d_loss_real[0], d_loss_fake[0], 100*d_loss[3], 100*d_loss[4], g_loss))
 
             # If at save interval => save generated image samples
             if epoch % sample_interval == 0:
