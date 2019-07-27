@@ -254,5 +254,5 @@ if __name__ == '__main__':
     g = gen.generate()
 
     sgan = SGAN(traindata_generator = g)
-    sgan.train(epochs=20000, batch_size=batchsize, sample_interval=50)
+    sgan.train(epochs=20000, batch_size=batchsize, sample_interval=100)
 
