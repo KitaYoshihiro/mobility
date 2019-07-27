@@ -207,7 +207,7 @@ class SGAN:
         gen_imgs = 0.5 * gen_imgs + 0.5
 
         figsize_px = np.array([6.4, 4.8])
-        fig, axs = plt.subplots(r, c, figsize=figsize_px, dpi=100)
+        fig, axs = plt.subplots(r, c, figsize=figsize_px, dpi=300)
         cnt = 0
         for i in range(r):
             for j in range(c):
