@@ -199,14 +199,14 @@ class SGAN:
                 self.sample_images(epoch)
 
     def sample_images(self, epoch):
-        r, c = 3, 3
+        r, c = 4, 2
         noise = np.random.normal(0, 1, (r * c, self.latent_dim))
         gen_imgs = self.generator.predict(noise)
 
         # Rescale images 0 - 1
         # gen_imgs = 0.5 * gen_imgs + 0.5
 
-        figsize_px = np.array([12, 8])
+        figsize_px = np.array([12, 6])
         fig, axs = plt.subplots(r, c, figsize=figsize_px, dpi=600)
         cnt = 0
         for i in range(r):
