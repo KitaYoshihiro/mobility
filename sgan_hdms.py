@@ -86,19 +86,13 @@ class SGAN:
 
         model = Sequential()
 
-        model.add(Conv2D(8, kernel_size=3, strides=1, input_shape=self.img_shape, padding="same"))
+        model.add(Conv2D(32, kernel_size=3, strides=1, input_shape=self.img_shape, padding="same"))
         model.add(LeakyReLU(alpha=0.2))
         model.add(Dropout(0.25))
-
-        model.add(MaxPooling2D())
-        model.add(Conv2D(16, kernel_size=3, strides=1, padding="same"))
-        #model.add(ZeroPadding2D(padding=((0,1),(0,1))))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(Dropout(0.25))
-        model.add(BatchNormalization(momentum=0.8))
 
         model.add(MaxPooling2D())
         model.add(Conv2D(32, kernel_size=3, strides=1, padding="same"))
+        #model.add(ZeroPadding2D(padding=((0,1),(0,1))))
         model.add(LeakyReLU(alpha=0.2))
         model.add(Dropout(0.25))
         model.add(BatchNormalization(momentum=0.8))
@@ -123,6 +117,12 @@ class SGAN:
 
         model.add(MaxPooling2D())
         model.add(Conv2D(512, kernel_size=3, strides=1, padding="same"))
+        model.add(LeakyReLU(alpha=0.2))
+        model.add(Dropout(0.25))
+        model.add(BatchNormalization(momentum=0.8))
+
+        model.add(MaxPooling2D())
+        model.add(Conv2D(1024, kernel_size=3, strides=1, padding="same"))
         model.add(LeakyReLU(alpha=0.2))
         model.add(Dropout(0.25))
         model.add(Flatten())
