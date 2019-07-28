@@ -25,7 +25,7 @@ class HDMSGenerator(object):
                 classid = ret_y[i]
                 is_blend = np.random.random() > 0.2
                 #is_blend = np.random.randint(0, 2, 1) # 二択（シングルかブレンドか　0シングル　1ブレンド）
-                XIDs = np.random.randint(self.offsets[0], self.offsets[classid+1], 2)
+                XIDs = np.random.randint(self.offsets[classid], self.offsets[classid+1], 2)
                 if is_blend:
                     f = np.random.beta(0.5, 0.5, 1)
                     synX = self.train_X[XIDs[0]] * f + self.train_X[XIDs[1]] * (1-f)
