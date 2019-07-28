@@ -131,7 +131,8 @@ def HDMSChromUNet(input_shape, depth=8, u_net=True, magnify=False, logtransform=
     net['dense_1'] = Dense(64, name='dense_1')(net['autoencoder_flatten'])
     net['dense_2'] = Dense(64, name='dense_2')(net['dense_1'])
     net['dense_3'] = Dense(64, name='dense_3')(net['dense_2'])
-    net['class_prediction'] = Dense(2, name ='class_prediction')(net['dense_3'])
+    net['dense_4'] = Dense(2, name ='dense_4')(net['dense_3'])
+    net['class_prediction'] = Activation(activation='softmax', name='softmax')(net['dense_4'])
 
     model = Model(net['input'], net['class_prediction'])
     return model
