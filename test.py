@@ -214,7 +214,7 @@ if __name__ == '__main__':
       1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 
       1,1,1, 0,0,0
       ]) # 50 samples x 3 injections
-    
+    y = to_categorical(y, 2)
     with open('y_150.pickle', 'wb') as f:
         pickle.dump(y, f)
 

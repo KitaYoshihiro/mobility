@@ -5,8 +5,8 @@ from random import random
 import pickle
 
 class HDMSGenerator(object):
-    def __init__(self, batch_size, train_X, train_y):
-        self.batch_size = batch_size
+    def __init__(self, train_X, train_y):
+        self.batch_size = 8
         traindata = list(zip(train_X, train_y))
         traindata.sort(key=lambda x: x[1])
         self.train_X, self.train_y = zip(*traindata)
