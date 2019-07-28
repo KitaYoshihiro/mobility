@@ -136,7 +136,8 @@ class SGAN:
 
         valid = Dense(1, activation="sigmoid")(features)
         pre_label = Dense(50, activation="relu")(features)
-        label = Dense(self.num_classes+1, activation="softmax")(pre_label)
+        pre_labe2 = Dense(50, activation="relu")(pre_label)
+        label = Dense(self.num_classes+1, activation="softmax")(pre_labe2)
 
         model = Model(inputImage, [valid, label])
         model.summary()
