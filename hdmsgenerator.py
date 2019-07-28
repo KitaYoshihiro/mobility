@@ -36,23 +36,11 @@ class HDMSGenerator(object):
             yield np.array(ret_X)[:,:,:,np.newaxis], [to_categorical(ret_y, num_classes=2), np.array(ret_X2).reshape(self.batch_size, -1)]
 
 if __name__ == '__main__':
-    with open('20190719_bin_1_ndarray.pickle', mode='rb') as f:
+    with open('../20190719_bin_1_ndarray.pickle', mode='rb') as f:
         X = pickle.load(f)
         X = X[0:150,4:196,]
-    # with open('y.pkl', mode='rb') as f:
-    #     y = pickle.load(f)
-    y = np.array([
-        1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
-        1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
-        1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
-        1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
-        1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
-        1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
-        1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
-        1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
-        1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
-        1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
-    ])
+    with open('../20190719_class_ndarray.pickle', mode='rb') as f:
+        y = pickle.load(f)
 
     gen = HDMSGenerator(train_X=X, train_y=y)
     g = gen.generate()
