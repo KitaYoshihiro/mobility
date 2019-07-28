@@ -127,10 +127,13 @@ def HDMSChromUNet(input_shape, depth=8, u_net=True, magnify=False, logtransform=
     x = Conv2DBNSigmoid(x, net, '_autoencoder', 1)
     net['autoencoder_flatten'] = Flatten(name='autoencoder_flatten')(x)
 
-    # Gather Predictions
-    net['predictions'] = net['autoencoder_flatten']
+    # Class Prediction
+    net['dense_1'] = Dense(64, name='dense_1')(net['autoencoder_flatten'])
+    net['dense_2'] = Dense(64, name='dense_2')(net['dense_1'])
+    net['dense_3'] = Dense(64, name='dense_3')(net['dense_2'])
+    net['class_prediction'] = Dense(2, name ='class_prediction')(net['dense_3'])
 
-    model = Model(net['input'], net['predictions'])
+    model = Model(net['input'], net['class_prediction'])
     return model
 
 if __name__ == '__main__':

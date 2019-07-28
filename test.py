@@ -12,6 +12,7 @@ from keras.utils import to_categorical
 import keras.backend as K
 
 import matplotlib.pyplot as plt
+import pickle
 
 import numpy as np
 
@@ -204,5 +205,19 @@ class SGAN:
 
 
 if __name__ == '__main__':
-    sgan = SGAN()
-    sgan.train(epochs=20000, batch_size=32, sample_interval=50)
+    y = np.array([
+      1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 
+      1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 
+      1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 
+      1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 
+      1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 
+      1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 1,1,1, 0,0,0, 
+      1,1,1, 0,0,0
+      ]) # 50 samples x 3 injections
+    
+    with open('y_150.pickle', 'wb') as f:
+        pickle.dump(y, f)
+
+    print(y)
+    # sgan = SGAN()
+    # sgan.train(epochs=20000, batch_size=32, sample_interval=50)
