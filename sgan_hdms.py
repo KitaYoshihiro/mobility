@@ -104,12 +104,12 @@ class SGAN:
         img = LeakyReLU(alpha=0.2)(img)
         img = Dropout(0.25)(img)
 
-        img = MaxPooling2D()(img)
-        img_1 = Conv2D(128, kernel_size=3, strides=1, padding="same")(img)
-        img_1 = BatchNormalization(momentum=0.8)(img_1)
-        img = Concatenate()([img_1, img])
-        img = LeakyReLU(alpha=0.2)(img)
-        img = Dropout(0.25)(img)
+        # img = MaxPooling2D()(img)
+        # img_1 = Conv2D(128, kernel_size=3, strides=1, padding="same")(img)
+        # img_1 = BatchNormalization(momentum=0.8)(img_1)
+        # img = Concatenate()([img_1, img])
+        # img = LeakyReLU(alpha=0.2)(img)
+        # img = Dropout(0.25)(img)
 
         # img = MaxPooling2D()(img)
         # img_1 = Conv2D(256, kernel_size=3, strides=1, padding="same")(img)
@@ -135,7 +135,8 @@ class SGAN:
         features = Flatten()(img)
 
         valid = Dense(1, activation="sigmoid")(features)
-        label = Dense(self.num_classes+1, activation="softmax")(features)
+        pre_label = Dense(50, activation="relu")(features)
+        label = Dense(self.num_classes+1, activation="softmax")(pre_label)
 
         model = Model(inputImage, [valid, label])
         model.summary()
