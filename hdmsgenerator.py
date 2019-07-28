@@ -52,7 +52,7 @@ if __name__ == '__main__':
         1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
     ])
 
-    gen = HDMSGenerator(batch_size=20, train_X=X, train_y=y)
+    gen = HDMSGenerator(train_X=X, train_y=y)
     g = gen.generate()
     a, b = next(g)
     print(np.array(a).shape, '\n', b)
