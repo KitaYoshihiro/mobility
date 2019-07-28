@@ -3,6 +3,7 @@ from numpy.random import randint
 from random import shuffle
 from random import random
 import pickle
+from keras.utils import to_categorical
 
 class HDMSGenerator(object):
     def __init__(self, train_X, train_y):
@@ -30,7 +31,7 @@ class HDMSGenerator(object):
                     ret_X.append(synX)
                 else:
                     ret_X.append(self.train_X[XIDs[0]])
-            yield np.array(ret_X)[:,:,:,np.newaxis], ret_y
+            yield np.array(ret_X)[:,:,:,np.newaxis], to_categorical(ret_y, num_classes=2)
 
 if __name__ == '__main__':
     with open('20190719_bin_1_ndarray.pickle', mode='rb') as f:
