@@ -31,7 +31,7 @@ class HDMSGenerator(object):
                     ret_X.append(synX)
                 else:
                     ret_X.append(self.train_X[XIDs[0]])
-            yield np.array(ret_X)[:,:,:,np.newaxis], to_categorical(ret_y, num_classes=2)
+            yield np.array(ret_X)[:,:,:,np.newaxis], [to_categorical(ret_y, num_classes=2), np.array(ret_X)[:,:,:,np.newaxis]]
 
 if __name__ == '__main__':
     with open('20190719_bin_1_ndarray.pickle', mode='rb') as f:
