@@ -17,6 +17,7 @@ from keras.layers import merge
 from keras.layers import Reshape
 from keras.layers import ZeroPadding2D
 from keras.models import Model
+from keras import regularizers
 
 import pickle
 
