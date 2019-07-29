@@ -34,7 +34,7 @@ class SGAN:
         self.discriminator = self.build_discriminator()
         self.discriminator.compile(
             loss=['binary_crossentropy', 'categorical_crossentropy'],
-            loss_weights=[0.1, 0.9], #ここのバランスを変えてみる（初期は0.5, 0.5）
+            loss_weights=[0.5, 0.5], #ここのバランスを変えてみる（初期は0.5, 0.5）
             optimizer=optimizer,
             metrics=['accuracy']
         )
