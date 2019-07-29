@@ -82,7 +82,7 @@ def HDMSDenseNet(input_shape, num_classes=2):
     net['conv2d_82'] = Conv2D(32, (3, 3), padding='same', name='conv2d_82')(net['relu_81'])
     net['batchnorm_82'] = BatchNormalization(name='batchnorm_82')(net['conv2d_82'])
     net['relu_82'] = Activation(activation='relu', name='relu_82')(net['batchnorm_82'])
-    net['conv2d_83'] = Conv2D(32, (3, 3), padding='same', name='conv2d_83')(net['relu_82'])
+    net['conv2d_83'] = Conv2D(1, (3, 3), padding='same', name='conv2d_83')(net['relu_82'])
     net['batchnorm_83'] = BatchNormalization(name='batchnorm_83')(net['conv2d_83'])
     net['relu_83'] = Activation(activation='sigmoid', name='relu_83')(net['batchnorm_83'])
 
