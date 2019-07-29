@@ -35,17 +35,22 @@ def HDMSDenseNet(input_shape, num_classes=2):
     net['batchnorm_12'] = BatchNormalization(name='batchnorm_12')(net['conv2d_12'])
     net['relu_12'] = Activation(activation='relu', name='relu_12')(net['batchnorm_12'])
 
-    net['upsample2d_1'] = UpSampling2D(name='upsample2d_1')(net['relu_12'])
+    net['maxpooling2d_1'] = MaxPooling2D(name='maxpooling2d_1')(net['relu_12'])
 
-    net['conv2d_21'] = Conv2D(32, (3, 3), padding='same', name='conv2d_21')(net['upsample2d_1'])
+    net['conv2d_21'] = Conv2D(32, (3, 3), padding='same', name='conv2d_21')(net['maxpooling2d_1'])
     net['batchnorm_21'] = BatchNormalization(name='batchnorm_21')(net['conv2d_21'])
     net['relu_21'] = Activation(activation='relu', name='relu_21')(net['batchnorm_21'])
     net['conv2d_22'] = Conv2D(32, (3, 3), padding='same', name='conv2d_22')(net['relu_21'])
     net['batchnorm_22'] = BatchNormalization(name='batchnorm_22')(net['conv2d_22'])
-    net['relu_22'] = Activation(activation='relu', name='relu_22')(net['batchnorm_22'])    
+    net['relu_22'] = Activation(activation='relu', name='relu_22')(net['batchnorm_22'])
+    net['conv2d_32'] = Conv2D(1, (3, 3), padding='same', name='conv2d_32')(net['relu_22'])
+    net['batchnorm_32'] = BatchNormalization(name='batchnorm_32')(net['conv2d_32'])
+    net['relu_32'] = Activation(activation='relu', name='relu_32')(net['batchnorm_32'])
+
+    net['flatten_1'] = Flatten(name='flatten_1')(net['relu_32'])
 
     # Class Prediction
-    net['dense_101'] = Dense(64, name='dense_101')(net['relu_22'])
+    net['dense_101'] = Dense(64, name='dense_101')(net['flatten_1'])
     net['batchnorm_101'] = BatchNormalization(name='batchnorm_101')(net['dense_101'])
     net['activation_101'] = Activation(activation='relu', name='activation_101')(net['batchnorm_101'])
     net['dense_102'] = Dense(64, name='dense_102')(net['activation_101'])
