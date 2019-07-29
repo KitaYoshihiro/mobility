@@ -217,9 +217,12 @@ if __name__ == '__main__':
     # y = to_categorical(y, 2)
 
     #chrom = np.random.rand(100,192,1024)    
-    labels = np.zeros(100)
+    #labels = np.zeros(100)
+    labels = np.ones(150)
 
-    with open('labels_zeros.pickle', 'wb') as f:
+    # with open('labels_zeros.pickle', 'wb') as f:
+    #     pickle.dump(labels, f)
+    with open('labels_ones.pickle', 'wb') as f:
         pickle.dump(labels, f)
 
     # print(y)
