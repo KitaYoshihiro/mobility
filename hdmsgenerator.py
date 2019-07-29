@@ -23,8 +23,8 @@ class HDMSGenerator(object):
             ret_y = np.random.randint(0, 2, self.batch_size)
             for i in range(self.batch_size):
                 classid = ret_y[i]
-                #is_blend = np.random.random() > 0.2
-                is_blend = False
+                is_blend = np.random.random() > 0.2
+                #is_blend = False
                 #is_blend = np.random.randint(0, 2, 1) # 二択（シングルかブレンドか　0シングル　1ブレンド）
                 XIDs = np.random.randint(self.offsets[classid], self.offsets[classid+1], 2)
                 if is_blend:
