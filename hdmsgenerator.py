@@ -37,7 +37,7 @@ class HDMSGenerator(object):
             if simple:
                 yield np.array(ret_X)[:,:,:,np.newaxis], to_categorical(ret_y, num_classes=2)
             else:
-                yield np.array(ret_X)[:,:,:,np.newaxis], [to_categorical(ret_y, num_classes=2), np.array(ret_X2).reshape(self.batch_size, -1)]
+                yield np.array(ret_X)[:,:,:,np.newaxis], [to_categorical(ret_y, num_classes=2), np.array(ret_X2).reshape(self.batch_size, ret_X.shape[1], ret_X.shape[2], -1)]
 
 if __name__ == '__main__':
     with open('../20190719_bin_1_ndarray.pickle', mode='rb') as f:
