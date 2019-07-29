@@ -62,13 +62,13 @@ def HDMSDenseNet(input_shape, num_classes=2):
     net['flatten_1'] = Flatten(name='flatten_1')(net['relu_33'])
 
     # Class Prediction
-    net['dense_101'] = Dense(64, name='dense_101')(net['flatten_1'])
+    net['dense_101'] = Dense(64, name='dense_101', kernel_regularizer=regularizers.l2(0.001))(net['flatten_1'])
     net['batchnorm_101'] = BatchNormalization(name='batchnorm_101')(net['dense_101'])
     net['activation_101'] = Activation(activation='relu', name='activation_101')(net['batchnorm_101'])
-    net['dense_102'] = Dense(64, name='dense_102')(net['activation_101'])
+    net['dense_102'] = Dense(64, name='dense_102', kernel_regularizer=regularizers.l2(0.001))(net['activation_101'])
     net['batchnorm_102'] = BatchNormalization(name='batchnorm_102')(net['dense_102'])
     net['activation_102'] = Activation(activation='relu', name='activation_102')(net['batchnorm_102'])
-    net['dense_103'] = Dense(64, name='dense_103')(net['activation_102'])
+    net['dense_103'] = Dense(64, name='dense_103', kernel_regularizer=regularizers.l2(0.001))(net['activation_102'])
     net['batchnorm_103'] = BatchNormalization(name='batchnorm_103')(net['dense_103'])
     net['activation_103'] = Activation(activation='relu', name='activation_103')(net['batchnorm_103'])
 
