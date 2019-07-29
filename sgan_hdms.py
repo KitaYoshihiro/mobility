@@ -37,12 +37,12 @@ class SGAN:
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
-        self.discriminator.compile(
-            loss=['binary_crossentropy', 'categorical_crossentropy'],
-            loss_weights=[0.5, 0.5], #ここのバランスを変えてみる（初期は0.5, 0.5）
-            optimizer=optimizer,
-            metrics=['accuracy']
-        )
+        # self.discriminator.compile(
+        #     loss=['binary_crossentropy', 'categorical_crossentropy'],
+        #     loss_weights=[0.5, 0.5], #ここのバランスを変えてみる（初期は0.5, 0.5）
+        #     optimizer=optimizer,
+        #     metrics=['accuracy']
+        # )
 
         # Build the generator
         self.generator = self.build_generator()
@@ -70,6 +70,21 @@ class SGAN:
         self.combined = model
         self.combined.compile(loss=['binary_crossentropy'], optimizer=optimizer)
 
+        self.discriminator = tensorflow.contrib.tpu.keras_to_tpu_model(
+            self.discriminator, strategy=tensorflow.contrib.tpu.TPUDistributionStrategy(
+                tensorflow.contrib.cluster_resolver.TPUClusterResolver(
+                    tpu='grpc://' + os.environ['COLAB_TPU_ADDR']
+                    )
+                )
+        )
+        self.discriminator.compile(
+            loss=['binary_crossentropy', 'categorical_crossentropy'],
+            loss_weights=[0.5, 0.5], #ここのバランスを変えてみる（初期は0.5, 0.5）
+            optimizer=optimizer,
+            metrics=['accuracy']
+        )
+
+
     def build_generator(self):
 
         model = Sequential()
@@ -95,13 +110,6 @@ class SGAN:
 
         model = Model(noise, img)
 
-        model = tensorflow.contrib.tpu.keras_to_tpu_model(
-            model, strategy=tensorflow.contrib.tpu.TPUDistributionStrategy(
-                tensorflow.contrib.cluster_resolver.TPUClusterResolver(
-                    tpu='grpc://' + os.environ['COLAB_TPU_ADDR']
-                    )
-                )
-        )
         return model
 
     def build_discriminator(self):
@@ -160,14 +168,6 @@ class SGAN:
 
         model = Model(inputImage, [valid, label])
         model.summary()
-
-        model = tensorflow.contrib.tpu.keras_to_tpu_model(
-            model, strategy=tensorflow.contrib.tpu.TPUDistributionStrategy(
-                tensorflow.contrib.cluster_resolver.TPUClusterResolver(
-                    tpu='grpc://' + os.environ['COLAB_TPU_ADDR']
-                    )
-                )
-        )
 
         return model
 
