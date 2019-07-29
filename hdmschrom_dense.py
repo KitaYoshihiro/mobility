@@ -84,10 +84,10 @@ def HDMSDenseNet(input_shape, num_classes=2):
     net['relu_82'] = Activation(activation='relu', name='relu_82')(net['batchnorm_82'])
     net['conv2d_83'] = Conv2D(1, (3, 3), padding='same', name='conv2d_83')(net['relu_82'])
     net['batchnorm_83'] = BatchNormalization(name='batchnorm_83')(net['conv2d_83'])
-    net['relu_83'] = Activation(activation='sigmoid', name='relu_83')(net['batchnorm_83'])
+    net['activation_83'] = Activation(activation='sigmoid', name='decoded')(net['batchnorm_83'])
 
     # Decoded
-    net['decoded'] = net['relu_83']
+    net['decoded'] = net['activation_83']
 
     # Class Prediction
 
@@ -103,9 +103,9 @@ def HDMSDenseNet(input_shape, num_classes=2):
     net['batchnorm_103'] = BatchNormalization(name='batchnorm_103')(net['dense_103'])
     net['activation_103'] = Activation(activation='relu', name='activation_103')(net['batchnorm_103'])
 
-    net['class_prediction'] = Dense(2, name='class_prediction', activation='softmax')(net['activation_103'])
+    net['class'] = Dense(2, name='class', activation='softmax')(net['activation_103'])
 
-    model = Model(net['input_11'], [net['class_prediction'], net['decoded']])
+    model = Model(net['input_11'], [net['class'], net['decoded']])
     return model
 
 if __name__ == '__main__':
