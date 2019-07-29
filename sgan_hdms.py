@@ -184,7 +184,8 @@ class SGAN:
 
             # One-hot encoding of labels
             #labels = to_categorical(y_train[idx], num_classes=self.num_classes+1)
-            labels = to_categorical(y_train, num_classes=self.num_classes+1)
+            #labels = to_categorical(y_train, num_classes=self.num_classes+1)
+            labels = np.concatenate((y_train, np.zeros((batch_size, 1))), axis=1)
             fake_labels = to_categorical(np.full((batch_size, 1), self.num_classes), num_classes=self.num_classes+1)
 
             # Train the discriminator
@@ -259,7 +260,7 @@ if __name__ == '__main__':
     ]) # 24 samples x 3 injections
 
     batchsize = 8
-    gen = HDMSGenerator(batch_size=batchsize, train_X=X, train_y=y)
+    gen = HDMSGenerator(train_X=X, train_y=y)
     g = gen.generate()
 
     sgan = SGAN(traindata_generator = g)
