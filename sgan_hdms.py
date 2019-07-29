@@ -84,6 +84,8 @@ class SGAN:
             metrics=['accuracy']
         )
 
+        init = tensorflow.initialize_all_variables()
+
 
     def build_generator(self):
 
