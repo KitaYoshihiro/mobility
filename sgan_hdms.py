@@ -1,5 +1,7 @@
 from __future__ import print_function, division
 
+import tensorflow
+
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.layers import Input, Dense, Reshape, Flatten, Dropout, multiply, GaussianNoise, Concatenate
 from tensorflow.keras.layers import BatchNormalization, Activation, Embedding, ZeroPadding2D, MaxPooling2D
@@ -18,7 +20,7 @@ import pickle
 from hdmsgenerator import HDMSGenerator
 
 import matplotlib.pyplot as plt
-
+import os
 import numpy as np
 
 class SGAN:
@@ -57,7 +59,15 @@ class SGAN:
 
         # The combined model  (stacked generator and discriminator)
         # Trains generator to fool discriminator
-        self.combined = Model(noise, valid)
+        model = Model(noise, valid)
+        model = tensorflow.contrib.tpu.keras_to_tpu_model(
+            model, strategy=tensorflow.contrib.tpu.TPUDistributionStrategy(
+                tensorflow.contrib.cluster_resolver.TPUClusterResolver(
+                    tpu='grpc://' + os.environ['COLAB_TPU_ADDR']
+                    )
+                )
+        )
+        self.combined = model
         self.combined.compile(loss=['binary_crossentropy'], optimizer=optimizer)
 
     def build_generator(self):
@@ -83,7 +93,16 @@ class SGAN:
         noise = Input(shape=(self.latent_dim,))
         img = model(noise)
 
-        return Model(noise, img)
+        model = Model(noise, img)
+
+        model = tensorflow.contrib.tpu.keras_to_tpu_model(
+            model, strategy=tensorflow.contrib.tpu.TPUDistributionStrategy(
+                tensorflow.contrib.cluster_resolver.TPUClusterResolver(
+                    tpu='grpc://' + os.environ['COLAB_TPU_ADDR']
+                    )
+                )
+        )
+        return model
 
     def build_discriminator(self):
 
@@ -141,6 +160,14 @@ class SGAN:
 
         model = Model(inputImage, [valid, label])
         model.summary()
+
+        model = tensorflow.contrib.tpu.keras_to_tpu_model(
+            model, strategy=tensorflow.contrib.tpu.TPUDistributionStrategy(
+                tensorflow.contrib.cluster_resolver.TPUClusterResolver(
+                    tpu='grpc://' + os.environ['COLAB_TPU_ADDR']
+                    )
+                )
+        )
 
         return model
 
