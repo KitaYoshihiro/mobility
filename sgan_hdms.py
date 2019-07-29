@@ -26,7 +26,7 @@ class SGAN:
         self.channels = 1
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
         self.num_classes = 2
-        self.latent_dim = 2
+        self.latent_dim = 50
 
         optimizer = Adam(0.0002, 0.5)
 
@@ -60,8 +60,8 @@ class SGAN:
     def build_generator(self):
 
         model = Sequential()
-        model.add(Dense(128 * 48 * 256, activation="relu", input_dim=self.latent_dim))
-        model.add(Reshape((48, 256, 128)))
+        model.add(Dense(64 * 48 * 256, activation="relu", input_dim=self.latent_dim))
+        model.add(Reshape((48, 256, 64)))
         model.add(BatchNormalization(momentum=0.8))
         model.add(UpSampling2D())
         model.add(Conv2D(64, kernel_size=3, padding="same"))
