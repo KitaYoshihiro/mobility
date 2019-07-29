@@ -217,10 +217,17 @@ if __name__ == '__main__':
     # y = to_categorical(y, 2)
 
     #chrom = np.random.rand(100,192,1024)    
-    labels = np.zeros(100)
+    #labels = np.zeros(100)
+    labels = np.ones((10, 2))
+    labels2 = np.zeros((10, 2))
+    a = np.concatenate((labels, labels2), axis = 0)
+    print(a.shape)
+    print(labels2.shape)
 
-    with open('labels_zeros.pickle', 'wb') as f:
-        pickle.dump(labels, f)
+    # with open('labels_zeros.pickle', 'wb') as f:
+    #     pickle.dump(labels, f)
+    # with open('labels_ones.pickle', 'wb') as f:
+    #     pickle.dump(labels, f)
 
     # print(y)
     # sgan = SGAN()
