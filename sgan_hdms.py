@@ -33,7 +33,7 @@ class SGAN:
         self.num_classes = 2
         self.latent_dim = 5
 
-        optimizer = Adam(0.0002, 0.5)
+        optimizer = tensorflow.keras.optimizers.Adam(0.0002, 0.5)
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
