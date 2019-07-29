@@ -83,61 +83,58 @@ class SGAN:
         return Model(noise, img)
 
     def build_discriminator(self):
+
+        model = Sequential()
+
+        model.add(Conv2D(32, kernel_size=3, strides=2, input_shape=self.img_shape, padding="same"))
+        model.add(LeakyReLU(alpha=0.2))
+        model.add(Dropout(0.25))
+        model.add(Conv2D(64, kernel_size=3, strides=2, padding="same"))
+        model.add(ZeroPadding2D(padding=((0,1),(0,1))))
+        model.add(LeakyReLU(alpha=0.2))
+        model.add(Dropout(0.25))
+        model.add(BatchNormalization(momentum=0.8))
+        model.add(Conv2D(128, kernel_size=3, strides=2, padding="same"))
+        model.add(LeakyReLU(alpha=0.2))
+        model.add(Dropout(0.25))
+        model.add(BatchNormalization(momentum=0.8))
+        model.add(Conv2D(256, kernel_size=3, strides=1, padding="same"))
+        model.add(LeakyReLU(alpha=0.2))
+        model.add(Dropout(0.25))
+        model.add(Flatten())
+
         inputImage = Input(shape=self.img_shape)
-
-        img = Conv2D(32, kernel_size=3, strides=1, input_shape=self.img_shape, padding="same")(inputImage)
-        img = BatchNormalization(momentum=0.8)(img)
-        img = LeakyReLU(alpha=0.2)(img)
-        img = Dropout(0.25)(img)
-
-        img= MaxPooling2D()(img)
-        img_1 = Conv2D(32, kernel_size=3, strides=1, padding="same")(img)
-        img_1 = BatchNormalization(momentum=0.8)(img_1)
-        img = Concatenate()([img_1, img])
-        img = LeakyReLU(alpha=0.2)(img)
-        img = Dropout(0.25)(img)
-
-        img = MaxPooling2D()(img)
-        img_1 = Conv2D(64, kernel_size=3, strides=1, padding="same")(img)
-        img_1 = BatchNormalization(momentum=0.8)(img_1)
-        img = Concatenate()([img_1, img])
-        img = LeakyReLU(alpha=0.2)(img)
-        img = Dropout(0.25)(img)
-
-        # img = MaxPooling2D()(img)
-        # img_1 = Conv2D(128, kernel_size=3, strides=1, padding="same")(img)
-        # img_1 = BatchNormalization(momentum=0.8)(img_1)
-        # img = Concatenate()([img_1, img])
-        # img = LeakyReLU(alpha=0.2)(img)
-        # img = Dropout(0.25)(img)
-
-        # img = MaxPooling2D()(img)
-        # img_1 = Conv2D(256, kernel_size=3, strides=1, padding="same")(img)
-        # img_1 = BatchNormalization(momentum=0.8)(img_1)
-        # img = Concatenate()([img_1, img])
-        # img = LeakyReLU(alpha=0.2)(img)
-        # img = Dropout(0.25)(img)
-
-        # img = MaxPooling2D()(img)
-        # img_1 = Conv2D(512, kernel_size=3, strides=1, padding="same")(img)
-        # img_1 = BatchNormalization(momentum=0.8)(img_1)
-        # img = Concatenate()([img_1, img])
-        # img = LeakyReLU(alpha=0.2)(img)
-        # img = Dropout(0.25)(img)
-
-        # img = MaxPooling2D()(img)
-        # img_1 = Conv2D(1024, kernel_size=3, strides=1, padding="same")(img)
-        # img_1 = BatchNormalization(momentum=0.8)(img_1)
-        # img = Concatenate()([img_1, img])
-        # img = LeakyReLU(alpha=0.2)(img)
-        # img = Dropout(0.25)(img)
-
-        features = Flatten()(img)
-
+        
+        features = model(inputImage)
         valid = Dense(1, activation="sigmoid")(features)
-        pre_label = Dense(50, activation="relu")(features)
-        pre_labe2 = Dense(50, activation="relu")(pre_label)
-        label = Dense(self.num_classes+1, activation="softmax")(pre_labe2)
+        label = Dense(self.num_classes+1, activation="softmax")(features)
+
+
+        # img = Conv2D(32, kernel_size=3, strides=1, input_shape=self.img_shape, padding="same")(inputImage)
+        # img = BatchNormalization(momentum=0.8)(img)
+        # img = LeakyReLU(alpha=0.2)(img)
+        # img = Dropout(0.25)(img)
+
+        # img= MaxPooling2D()(img)
+        # img_1 = Conv2D(32, kernel_size=3, strides=1, padding="same")(img)
+        # img_1 = BatchNormalization(momentum=0.8)(img_1)
+        # img = Concatenate()([img_1, img])
+        # img = LeakyReLU(alpha=0.2)(img)
+        # img = Dropout(0.25)(img)
+
+        # img = MaxPooling2D()(img)
+        # img_1 = Conv2D(64, kernel_size=3, strides=1, padding="same")(img)
+        # img_1 = BatchNormalization(momentum=0.8)(img_1)
+        # img = Concatenate()([img_1, img])
+        # img = LeakyReLU(alpha=0.2)(img)
+        # img = Dropout(0.25)(img)
+
+        # features = Flatten()(img)
+
+        # valid = Dense(1, activation="sigmoid")(features)
+        # pre_label = Dense(50, activation="relu")(features)
+        # pre_labe2 = Dense(50, activation="relu")(pre_label)
+        # label = Dense(self.num_classes+1, activation="softmax")(pre_labe2)
 
         model = Model(inputImage, [valid, label])
         model.summary()
