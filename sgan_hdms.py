@@ -26,7 +26,7 @@ class SGAN:
         self.channels = 1
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
         self.num_classes = 2
-        self.latent_dim = 50
+        self.latent_dim = 5
 
         optimizer = Adam(0.0002, 0.5)
 
